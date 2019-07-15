@@ -39,9 +39,7 @@ class AdminController extends Controller
 
         Image::make($file->getRealPath())->save(public_path('files/images/'. $filename));
 
-        if ($old) {
-            @unlink(public_path('files/images/' .$old));
-        }
+
         return $filename;
     }
 
@@ -70,7 +68,7 @@ class AdminController extends Controller
                 return redirect('admin/notice');
             }
         } catch (Exception $e) {
-            flash('Error when login! Please try again!');
+            flash('Error when login! Please try again!'.$e->getMessage());
             return redirect('admin/notice');
         }
 

@@ -52,7 +52,7 @@
                         <div class="note2 note">
                             <div class="title">
                                 <span class="number">2</span>
-                                Gọi tới tổng đài tư vấn và chăm sóc KH: <a href="tel:18001190">1800 1190 </a> (miễn phí cước gọi) - <a href="tel:0912571190">0912 571 190</a>
+                                Gọi tới tổng đài tư vấn và chăm sóc KH: <a href="tel:18001190">1800 1190 </a> (miễn phí cước gọi)
                             </div>
                         </div>
                         <div class="note3 note">
@@ -107,14 +107,11 @@
             });
         });
     </script>
-<!-- Google Code for T&igrave;m mua h&agrave;ng Conversion Page -->
+<!-- Google Code for Ph&acirc;n ph&#7889;i Conversion Page -->
 <script type="text/javascript">
 /* <![CDATA[ */
-var google_conversion_id = 964027423;
-var google_conversion_language = "en";
-var google_conversion_format = "3";
-var google_conversion_color = "ffffff";
-var google_conversion_label = "S5loCPGLxHEQn8jXywM";
+var google_conversion_id = 867404030;
+var google_conversion_label = "G_fZCNDHvXEQ_pHOnQM";
 var google_remarketing_only = false;
 /* ]]> */
 </script>
@@ -122,7 +119,7 @@ var google_remarketing_only = false;
 </script>
 <noscript>
 <div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/964027423/?label=S5loCPGLxHEQn8jXywM&amp;guid=ON&amp;script=0"/>
+<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/867404030/?label=G_fZCNDHvXEQ_pHOnQM&amp;guid=ON&amp;script=0"/>
 </div>
 </noscript>
 

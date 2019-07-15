@@ -23,41 +23,73 @@ class FrontendController extends Controller
     {
         $page = 'index';
 
-        $indexTopPosts = DB::table('posts')
-            ->select('posts.image', 'posts.slug', 'posts.title')
-            ->latest('posts.created_at')
-            ->join('modules', 'modules.key_value', '=', 'posts.id')
-            ->where('modules.key_type', 'display_in_index_top')
-            ->where('modules.key_content', 'posts')
-            ->limit(5)
-            ->get();
 
-        $indexCategories = DB::table('categories')
-            ->join('modules', 'modules.key_value', '=', 'categories.id')
-            ->where('modules.key_content', 'categories')
-            ->whereIn('key_type',  [
-                'index_block_1',
-                'index_block_2',
-                'index_block_3',
-                'index_block_4',
-            ])
-            ->select('modules.key_type', 'categories.id', 'categories.name')
-            ->get();
 
-        return view('frontend.index', compact('page', 'indexTopPosts', 'indexCategories'));
+        $topIndexCategory = Category::join('modules', function($join) {
+            $join->on('modules.key_value', '=', 'categories.id');
+            $join->on('modules.key_type', DB::raw("'index_block_1'"));
+            $join->on('modules.key_content', DB::raw("'categories'"));
+        })
+
+            ->select('categories.*')
+            ->whereNull('categories.parent_id')
+            ->first();
+
+        $firstTabs = ['tab-group', 'tab-sectors', 'tab-third', 'tab-fourth'];
+
+        $secondIndexCategory = Category::join('modules', function($join) {
+            $join->on('modules.key_value', '=', 'categories.id');
+            $join->on('modules.key_type', DB::raw("'index_block_2'"));
+            $join->on('modules.key_content', DB::raw("'categories'"));
+        })
+
+            ->select('categories.*')
+            ->whereNull('categories.parent_id')
+
+            ->first();
+
+        $secondTabs = ['tab-expert' , 'tab-research'];
+
+        $thirdCate = Category::join('modules', function($join) {
+            $join->on('modules.key_value', '=', 'categories.id');
+            $join->on('modules.key_type', DB::raw("'index_block_3'"));
+            $join->on('modules.key_content', DB::raw("'categories'"));
+        })
+        ->select('categories.*')
+        ->whereNull('categories.parent_id')
+        ->first();
+
+
+        return view('frontend.index', compact(
+            'page',
+            'topIndexCategory',
+            'firstTabs',
+            'secondTabs',
+            'secondIndexCategory',
+            'thirdCate'
+        ));
     }
 
     public function category($slug)
     {
         $category = Category::findBySlug($slug);
         if ($category) {
+
+            if ($category->id == 11 | $category->slug == 'san-pham') {
+                $post = $category->posts->first();
+                return redirect(url($post->slug.'.html'));
+            }
+
             $page = ($category->parent_id) ? $category->parent->slug : $category->slug;
+
+            $meta_title = $category->seo_name ? $category->seo_name : $category->name;
+            $meta_desc = $category->desc;
 
             $subCategoryIds = Category::where('parent_id', $category->id)->pluck('id')->all();
             $categoryIds = ($subCategoryIds) ? $subCategoryIds : [$category->id];
 
             $posts = Post::where('status', true)->latest('created_at')->whereIn('category_id', $categoryIds)->paginate(10);
-            return view('frontend.category', compact('page', 'posts', 'category'));
+            return view('frontend.category', compact('page', 'posts', 'category', 'meta_title', 'meta_desc'));
         }  else {
             return redirect('/');
         }
@@ -75,7 +107,9 @@ class FrontendController extends Controller
         if ($slug) {
             $question = Question::findBySlug($slug);
             if ($question) {
-                return view('frontend.question_detail', compact('page', 'question'));
+                $meta_title = $question->title;
+                $meta_desc = $question->question;
+                return view('frontend.question_detail', compact('page', 'question', 'meta_title', 'meta_desc'));
             } else {
                 return redirect('/');
             }
@@ -95,7 +129,7 @@ class FrontendController extends Controller
                 $meta_desc = $post->desc;
                 $page = ($post->category->parent_id) ? $post->category->parent->slug : $post->category->slug;
                 if ($post->content_1 && $post->content_2) {
-                    return view('frontend.product', compact('page', 'post', 'title'));
+                    return view('frontend.product', compact('page', 'post', 'meta_title', 'meta_desc'));
                 } else {
                     return view('frontend.post', compact('page', 'post', 'meta_title', 'meta_desc'));
                 }
@@ -214,7 +248,7 @@ class FrontendController extends Controller
                 return redirect('/');
             }
         }
-        $videos = Video::paginate(12);
+            $videos = Video::latest('created_at')->paginate(12);
         return view('frontend.video', compact('mainVideo', 'videos', 'page'));
     }
 

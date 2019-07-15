@@ -21,7 +21,7 @@
                                 </p>
                                 <div class="answer">Trả lời</div>
                                 <div class="answer-faq">
-                                   {{$question->answer}}
+                                    {!! $question->answer !!}
                                 </div>
                             </div>
                         </article>
